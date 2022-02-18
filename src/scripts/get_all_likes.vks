@@ -1,0 +1,39 @@
+var type = %TYPE%;
+var owner_id = %OWNER_ID%;
+var item_id = %ITEM_ID%;
+var initial_offset = %INITIAL_OFFSET%;
+
+var req_params = {
+    type: type,
+    owner_id: owner_id,
+    item_id: item_id,
+    extended: 1,
+    count: 1000,
+    offset: 0
+};
+
+
+var iteration = 0;
+var item_likes_info = [];
+
+while (iteration < %ITERATIONS%) {
+
+    req_params.offset = initial_offset + iteration * 1000;
+
+    var item_likes_part = API.likes.getList(req_params);
+
+    if (!item_likes_part.items) {
+        return item_likes_info;
+    }
+
+    item_likes_info = item_likes_info + item_likes_part.items;
+
+    if (item_likes_part.items.length == 0) {
+        return item_likes_info;
+    }
+
+    iteration = iteration + 1;
+}
+
+return item_likes_info;
+

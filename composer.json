@@ -1,0 +1,23 @@
+{
+  "name": "vkolegov/vk-sdk-wrapper",
+  "description": "Custom wrapper for official VK PHP SDK",
+  "type": "library",
+  "require": {
+    "vkcom/vk-php-sdk": "^5.101",
+    "illuminate/support": "^9.1",
+    "guzzlehttp/guzzle": "^7.0"
+  },
+  "license": "Apache-2.0",
+  "authors": [
+    {
+      "name": "Vladislav Kolegov",
+      "email": "v.kolegov@outlook.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "VKolegov\\VKAPIWrapper\\": "/src"
+    }
+  },
+  "minimum-stability": "beta"
+}

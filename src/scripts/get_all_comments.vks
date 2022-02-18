@@ -1,0 +1,37 @@
+var owner_id = %OWNER_ID%;
+var post_id = %POST_ID%;
+
+var initial_offset = %INITIAL_OFFSET%;
+
+var iteration = 0;
+
+var req_params = {
+    owner_id: owner_id,
+    post_id: post_id,
+    thread_item_count: 10,
+    count: 100,
+    offset: 0,
+};
+
+var post_comments_info = [];
+
+while (iteration < %ITERATIONS%) {
+
+    req_params.offset = initial_offset + iteration * 100;
+
+    var post_comments_response = API.wall.getComments(req_params);
+
+    if (!post_comments_response.items) {
+        return post_comments_info;
+    }
+
+    post_comments_info = post_comments_info + post_comments_response.items;
+
+    if (post_comments_response.items.length = 0) {
+        return post_comments_info;
+    }
+    
+    iteration = iteration + 1;
+}
+
+return post_comments_info;
