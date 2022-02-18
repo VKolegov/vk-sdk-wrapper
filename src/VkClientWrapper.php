@@ -840,16 +840,51 @@ class VkClientWrapper
         return $response;
     }
 
-    public function getAdsStatistics($account_id, $ids_type, $ids, $start_date, $end_date)
+    /**
+     * @param int $account_id
+     * @param string $ids_type
+     * @param array $ids
+     * @param string $period day|week|month|year|overall
+     * @param \DateTimeInterface $start_date
+     * @param \DateTimeInterface $end_date
+     * @return mixed
+     * @throws \Exception
+     */
+    public function getAdsStatistics(int                $account_id,
+                                     string             $ids_type,
+                                     array              $ids,
+                                     string             $period,
+                                     \DateTimeInterface $start_date,
+                                     \DateTimeInterface $end_date)
     {
         $params = [
             'account_id' => $account_id,
             'ids_type' => $ids_type,
             'ids' => join(",", $ids),
-            'period' => 'day',
-            'date_from' => $start_date,
-            'date_to' => $end_date,
+            'period' => $period,
         ];
+
+        switch ($period) {
+            case 'day':
+            case 'week':
+                $params['date_from'] = $start_date->format('Y-m-d');
+                $params['date_to'] = $end_date->format('Y-m-d');
+                break;
+            case 'month':
+                $params['date_from'] = $start_date->format('Y-m');
+                $params['date_to'] = $end_date->format('Y-m');
+                break;
+            case 'year':
+                $params['date_from'] = $start_date->format('Y');
+                $params['date_to'] = $end_date->format('Y');
+                break;
+            case 'overall':
+                $params['date_from'] = 0;
+                $params['date_to'] = 0;
+                break;
+            default:
+                throw new \Exception("Unknown period: $period");
+        }
 
         $response = $this->core->call('ads.getStatistics', $params);
 

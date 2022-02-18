@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/vk-php-api.iml" filepath="$PROJECT_DIR$/.idea/vk-php-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/vk-sdk-wrapper.iml" filepath="$PROJECT_DIR$/.idea/vk-sdk-wrapper.iml" />
     </modules>
   </component>
 </project>
