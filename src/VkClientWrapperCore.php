@@ -28,30 +28,31 @@ class VkClientWrapperCore
         $this->client = new VKApiClient($version);
     }
 
-    public function call($method, $params)
+    /**
+     * @param string $method
+     * @param array $params
+     * @return array|mixed
+     * @throws \VK\Exceptions\VKApiException
+     * @throws \VK\Exceptions\VKClientException
+     */
+    public function call(string $method, array $params)
     {
         try {
             $response = $this->client->getRequest()->post($method, $this->access_token, $params);
         } catch (VKApiException $vke) {
 
             $code = $vke->getCode();
-            $message = $vke->getMessage();
 
             if ($code == 6 || $code == 9) {
                 usleep(500000); // TODO: Убрать этот стремный костыль
                 return $this->call($method, $params);
             } else {
-                \Log::error("[VK] Метод: " . $method . " параметры: " . json_encode($params) . " Ошибка код: " . $code . " сообщение: " . $message);
-                return $code;
+                $message = $vke->getMessage();
+                Log::error(
+                    "[VK] Метод: '$method'; параметры: " . json_encode($params) . "; Ошибка: [$code] $message"
+                );
+                throw $vke;
             }
-        }
-
-        // \Log::debug($response);
-
-        // TODO: после переезда с ATehnixVkClient никогда не произойдет
-        if (isset($response['error'])) {
-            \Log::error("[VK] Метод: " . $method . " параметры: " . json_encode($params) . " Ответ: " . $response);
-            return $response['error'];
         }
 
         return $response;
